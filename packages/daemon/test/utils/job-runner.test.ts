@@ -11,7 +11,9 @@ const runner = new JobRunner({
   pipeline: {} as any,
   plugins: {} as any,
   tracer: {} as any,
-  runnable: {} as any,
+  runnable: {
+    workingDir: '/data/tmp'
+  } as any,
   datasetRoot: __dirname
 });
 
@@ -57,7 +59,9 @@ describe('test JobRunner', () => {
         modelEvaluate: {}
       } as any,
       tracer: {} as any,
-      runnable: {} as any,
+      runnable: {
+        workingDir: '/data/tmp'
+      } as any,
       datasetRoot: __dirname
     });
     assert.doesNotThrow(() => {
@@ -98,7 +102,9 @@ describe('test JobRunner', () => {
       tracer: {
         dispatch
       } as any,
-      runnable: {} as any,
+      runnable: {
+        workingDir: '/data/tmp'
+      } as any,
       datasetRoot: __dirname
     });
     runner.dispatchJobEvent(core.PipelineStatus.SUCCESS, 'dataCollect', 'start');
@@ -120,7 +126,7 @@ describe('test JobRunner', () => {
       tracer: {
         dispatch
       } as any,
-      runnable: { start } as any,
+      runnable: { start, workingDir: '/data/tmp' } as any,
       datasetRoot: __dirname
     });
     const args = [ 1, 2, 3 ];
@@ -146,7 +152,9 @@ describe('test JobRunner', () => {
         }
       } as any,
       tracer: {} as any,
-      runnable: {} as any,
+      runnable: {
+        workingDir: '/data/tmp'
+      } as any,
       datasetRoot: __dirname
     });
     const ensureDir = sinon.stub(fs, 'ensureDir').resolves();
@@ -167,7 +175,9 @@ describe('test JobRunner', () => {
         }
       } as any,
       tracer: {} as any,
-      runnable: {} as any,
+      runnable: {
+        workingDir: '/data/tmp'
+      } as any,
       datasetRoot: __dirname
     });
     const ensureDir = sinon.stub(fs, 'ensureDir').resolves();
@@ -190,7 +200,9 @@ describe('test JobRunner', () => {
         }
       } as any,
       tracer: {} as any,
-      runnable: {} as any,
+      runnable: {
+        workingDir: '/data/tmp'
+      } as any,
       datasetRoot: __dirname
     });
     const runPlugin = sinon.stub(runner, 'runPlugin').resolves();
@@ -209,7 +221,9 @@ describe('test JobRunner', () => {
         }
       } as any,
       tracer: {} as any,
-      runnable: {} as any,
+      runnable: {
+        workingDir: '/data/tmp'
+      } as any,
       datasetRoot: __dirname
     });
     const runPlugin = sinon.stub(runner, 'runPlugin').resolves();
@@ -236,7 +250,9 @@ describe('test JobRunner', () => {
         }
       } as any,
       tracer: {} as any,
-      runnable: {} as any,
+      runnable: {
+        workingDir: '/data/tmp'
+      } as any,
       datasetRoot: __dirname
     });
     const runPlugin = sinon.stub(runner, 'runPlugin').resolves();
@@ -263,7 +279,9 @@ describe('test JobRunner', () => {
         }
       } as any,
       tracer: {} as any,
-      runnable: {} as any,
+      runnable: {
+        workingDir: '/data/tmp'
+      } as any,
       datasetRoot: __dirname
     });
     const mockModel = { mockModel: '' };
@@ -287,7 +305,9 @@ describe('test JobRunner', () => {
         }
       } as any,
       tracer: {} as any,
-      runnable: {} as any,
+      runnable: {
+        workingDir: '/data/tmp'
+      } as any,
       datasetRoot: __dirname
     });
     const mockModel = { mockModel: '' };
@@ -311,7 +331,9 @@ describe('test JobRunner', () => {
         }
       } as any,
       tracer: {} as any,
-      runnable: {} as any,
+      runnable: {
+        workingDir: '/data/tmp'
+      } as any,
       datasetRoot: __dirname
     });
     const mockModel = { mockModel: '' };
@@ -333,7 +355,9 @@ describe('test JobRunner', () => {
         }
       } as any,
       tracer: {} as any,
-      runnable: {} as any,
+      runnable: {
+        workingDir: '/data/tmp'
+      } as any,
       datasetRoot: __dirname
     });
     const mockModel = { mockModel: '' };
@@ -385,7 +409,7 @@ describe('test JobRunner', () => {
         }
       } as any,
       tracer: {} as any,
-      runnable: { workingDir: '/workingDir'} as any,
+      runnable: { workingDir: './workingDir', } as any,
       datasetRoot: __dirname
     });
     const mockDataset = { mockDataset: '' };
@@ -406,13 +430,13 @@ describe('test JobRunner', () => {
     assert.deepEqual(runDataCollect.args[0],
       [
         path.join(__dirname, 'mockDataCollect@1'),
-        path.join('/workingDir', 'model')
+        path.join('./workingDir', 'model')
       ]);
     assert.deepStrictEqual(runDataProcess.args[0][0], mockDataset, 'check runDataProcess');
     assert.deepStrictEqual(runDatasetProcess.args[0][0], mockDataset, 'check runDatasetProcess');
     assert.deepStrictEqual(runModelDefine.args[0][0], mockDataset, 'check runModelDefine');
-    assert.ok(runModelTrain.calledOnceWith(mockDataset, mockModel as any, path.join('/workingDir', 'model')));
-    assert.ok(runModelEvaluate.calledOnceWith(mockDataset, mockModelAfterTraining as any, path.join('/workingDir', 'model')));
+    assert.ok(runModelTrain.calledOnceWith(mockDataset, mockModel as any, path.join('./workingDir', 'model')));
+    assert.ok(runModelEvaluate.calledOnceWith(mockDataset, mockModelAfterTraining as any, path.join('./workingDir', 'model')));
     assert.ok(runDataAccess.calledOnce);
   });
 });

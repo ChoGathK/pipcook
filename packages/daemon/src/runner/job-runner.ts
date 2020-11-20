@@ -222,6 +222,7 @@ export class JobRunner {
     await this.runDataCollect(dataDir, modelPath);
 
     // copy data to a tmp directory
+    await fs.ensureDir(dataDir);
     await fs.copy(dataDir, this.tmpdataDir);
 
     const dataset = await this.runDataAccess(this.tmpdataDir);
