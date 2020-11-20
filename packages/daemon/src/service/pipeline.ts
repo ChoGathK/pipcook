@@ -271,6 +271,7 @@ export class PipelineService {
       throw err;
     } finally {
       await runnable.destroy();
+      await runner.destroy();
       delete this.runnableMap[job.id];
     }
   }

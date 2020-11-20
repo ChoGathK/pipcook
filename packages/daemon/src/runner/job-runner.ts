@@ -57,8 +57,11 @@ export interface JobResult {
  */
 export class JobRunner {
   opts: RunnerOptions;
+  tmpdataDir: string;
+
   constructor(opts: RunnerOptions) {
     this.opts = opts;
+    this.tmpdataDir = path.join(this.opts.runnable.workingDir, 'tmpdata');
   }
 
   /**
@@ -217,7 +220,11 @@ export class JobRunner {
     const modelPath = path.join(this.opts.runnable.workingDir, 'model');
 
     await this.runDataCollect(dataDir, modelPath);
-    const dataset = await this.runDataAccess(dataDir);
+
+    // copy data to a tmp directory
+    await fs.copy(dataDir, this.tmpdataDir);
+
+    const dataset = await this.runDataAccess(this.tmpdataDir);
     await this.runDatasetProcess(dataset);
     await this.runDataProcess(dataset);
 
@@ -242,5 +249,9 @@ export class JobRunner {
         datasetProcess: this.opts.plugins.datasetProcess?.plugin
       }
     };
+  }
+
+  async destroy(): Promise<void> {
+    await fs.remove(this.tmpdataDir);
   }
 }
